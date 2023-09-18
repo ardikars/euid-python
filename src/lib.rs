@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use pyo3::{prelude::*, pyclass::CompareOp, types::PyType};
+use pyo3::{prelude::*, pyclass::CompareOp, types::{PyType, PyBytes}};
 
 #[pyclass]
 #[derive(Clone)]
@@ -42,6 +42,11 @@ impl EUID {
 
     fn __bool__(&self) -> bool {
         self.0 != ::euid::EUID::default()
+    }
+
+    fn __bytes__<'a>(&self, py: Python<'a>) -> &'a PyBytes {
+        let v: [u8; 16] = From::from(self.0);
+        PyBytes::new(py, &v)
     }
 
     #[classmethod]
