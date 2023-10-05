@@ -1,6 +1,10 @@
 use std::str::FromStr;
 
-use pyo3::{prelude::*, pyclass::CompareOp, types::{PyType, PyBytes}};
+use pyo3::{
+    prelude::*,
+    pyclass::CompareOp,
+    types::{PyBytes, PyType},
+};
 
 #[pyclass]
 #[derive(Clone)]
@@ -69,6 +73,12 @@ impl EUID {
             Ok(id) => Ok(Some(EUID(id))),
             Err(_) => Ok(None),
         }
+    }
+
+    #[classmethod]
+    fn from_bytes(_cls: &PyType, val: [u8; 16]) -> PyResult<Option<EUID>> {
+        let id: ::euid::EUID = From::from(val);
+        Ok(Some(EUID(id)))
     }
 }
 
